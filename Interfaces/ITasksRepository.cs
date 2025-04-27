@@ -7,7 +7,7 @@ namespace ToDoApi.Interfaces
     public interface ITasksRepository
     {
         IEnumerable<TasksDto> GetAllAsync();
-        Task<TasksDto> GetByIdAsync(int id);
+        Task<Tasks> GetByIdAsync(int id);
         Task AddTaskAsync(Tasks task);
         Task UpdateTaskAsync(Tasks task);
         Task DeleteTasksAsync(int id);

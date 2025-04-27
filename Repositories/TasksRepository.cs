@@ -39,14 +39,14 @@ namespace ToDoApi.Repositories
         }
         public IEnumerable<TasksDto> GetAllAsync() => _appDbContext.Tasks.ToList().Select(t => t.ToTasksDto());
         
-        public async Task<TasksDto> GetByIdAsync(int id)
+        public async Task<Tasks> GetByIdAsync(int id)
         {
             var task = await _appDbContext.Tasks.FindAsync(id);
 
             if(task == null)
                 return null!;
 
-            return task.ToTasksDto();
+            return task;
         }
     }
 }
