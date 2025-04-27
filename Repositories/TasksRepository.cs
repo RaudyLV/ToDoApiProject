@@ -1,5 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using ToDoApi.Data;
+using ToDoApi.Dtos.Tasks;
 using ToDoApi.Interfaces;
+using ToDoApi.Mappings.Task;
 using ToDoApi.Models;
 
 namespace ToDoApi.Repositories
@@ -13,29 +16,37 @@ namespace ToDoApi.Repositories
             _appDbContext = appDbContext;
         }
 
-        public Task AddTaskAsync(Tasks task)
+        public async Task AddTaskAsync(Tasks task)
         {
-            throw new NotImplementedException();
+           await _appDbContext.Tasks.AddAsync(task);
+           await _appDbContext.SaveChangesAsync();
         }
 
-        public Task DeleteTasksAsync(int id)
+        public async Task DeleteTasksAsync(int id)
         {
-            throw new NotImplementedException();
+            var task = await _appDbContext.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (task != null)
+                _appDbContext.Tasks.Remove(task);
+                await _appDbContext.SaveChangesAsync();
         }
 
-        public Task<IEnumerable<Tasks>> GetAllAsync()
+        public async Task UpdateTaskAsync(Tasks task)
         {
-            throw new NotImplementedException();
+             if (task != null)
+                _appDbContext.Tasks.Update(task);
+                await _appDbContext.SaveChangesAsync();
         }
-
-        public Task<Tasks> GetByIdAsync(int id)
+        public IEnumerable<TasksDto> GetAllAsync() => _appDbContext.Tasks.ToList().Select(t => t.ToTasksDto());
+        
+        public async Task<TasksDto> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
-        }
+            var task = await _appDbContext.Tasks.FindAsync(id);
 
-        public Task UpdateTaskAsync(Tasks task)
-        {
-            throw new NotImplementedException();
+            if(task == null)
+                return null!;
+
+            return task.ToTasksDto();
         }
     }
 }
