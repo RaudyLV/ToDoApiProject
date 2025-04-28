@@ -11,6 +11,10 @@ using ToDoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<AppDbContext>(options =>{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
 builder.Services.AddIdentity<AppUser,IdentityRole>(options => 
 {
     options.Password.RequireNonAlphanumeric = true;
@@ -48,6 +52,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITasksRepository, TasksRepository>();
 builder.Services.AddScoped<ITasksService, TasksServices>();
+builder.Services.AddScoped<IJWTServices, JWTServices>();
 
 var app = builder.Build();
 
