@@ -1,4 +1,5 @@
 *.json
+!appsettings.json
 bin 
 *csproj
 *http
