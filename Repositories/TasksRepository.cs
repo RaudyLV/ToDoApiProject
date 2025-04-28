@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoApi.Data;
 using ToDoApi.Dtos.Tasks;
+using ToDoApi.Helpers;
 using ToDoApi.Interfaces;
 using ToDoApi.Mappings.Task;
 using ToDoApi.Models;
@@ -37,7 +38,22 @@ namespace ToDoApi.Repositories
                 _appDbContext.Tasks.Update(task);
                 await _appDbContext.SaveChangesAsync();
         }
-        public IEnumerable<TasksDto> GetAllTasks() => _appDbContext.Tasks.ToList().Select(t => t.ToTasksDto());
+        public async Task<List<Tasks>> GetAllTasks(QueryObject query)
+        {
+             var tasks = _appDbContext.Tasks.AsQueryable();
+
+             if(!string.IsNullOrEmpty(query.Title))
+             {
+                tasks = tasks.Where(t => t.Title.Contains(query.Title));
+             }
+
+             if(!string.IsNullOrEmpty(query.Description))
+             {
+                tasks = tasks.Where(t => t.Description.Contains(query.Description));    
+             }
+
+             return await tasks.ToListAsync();
+        }
         
         public async Task<Tasks> GetByIdAsync(int id) => await _appDbContext.Tasks.FindAsync(id);
     }

@@ -1,8 +1,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 using ToDoApi.Dtos.Tasks;
+using ToDoApi.Helpers;
 using ToDoApi.Interfaces;
-using ToDoApi.Mappings.Task;
 
 namespace ToDoApi.Controllers
 {
@@ -18,9 +18,9 @@ namespace ToDoApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync([FromQuery] QueryObject query)
         {
-            var tasks =  _tasksService.GetAllTasks();
+            var tasks =  await _tasksService.GetAllTasksAsync(query);
 
             if(!tasks.Any())
                 return NotFound("No hay tareas activas.");

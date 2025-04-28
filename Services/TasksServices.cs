@@ -1,5 +1,6 @@
 using ToDoApi.Dtos.Tasks;
 using ToDoApi.Enums;
+using ToDoApi.Helpers;
 using ToDoApi.Interfaces;
 using ToDoApi.Mappings.Task;
 using ToDoApi.Models;
@@ -14,7 +15,10 @@ namespace ToDoApi.Services
             _tasksRepository = tasksRepository;
         }
 
-        public IEnumerable<TasksDto> GetAllTasks() => _tasksRepository.GetAllTasks();
+        public async Task<List<Tasks>> GetAllTasksAsync(QueryObject query) 
+        {
+            return await _tasksRepository.GetAllTasks(query);
+        }
 
         public async Task<Tasks> GetByIdAsync(int id) 
         {
