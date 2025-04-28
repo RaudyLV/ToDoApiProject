@@ -1,15 +1,13 @@
-
 using ToDoApi.Dtos.Tasks;
 using ToDoApi.Models;
-
 namespace ToDoApi.Interfaces
 {
-    public interface ITasksRepository
+    public interface ITasksService
     {
         IEnumerable<TasksDto> GetAllTasks();
         Task<Tasks> GetByIdAsync(int id);
-        Task AddTaskAsync(Tasks task);
-        Task UpdateTaskAsync(Tasks task);
-        Task DeleteTasksAsync(int id);
+        Task AddTask(CreateTasksDto task);
+        Task UpdateTask(Tasks task, UpdateTasksDto updateTasksDto);
+        Task DeleteTask(int id);
     }
 }

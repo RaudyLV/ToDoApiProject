@@ -32,5 +32,16 @@ namespace ToDoApi.Mappings.Task
                 Priority = createTasksDto.Priority
             };
         }
+
+        public static Tasks ToTaskFromUpdateDto(this UpdateTasksDto updateTasksDto)
+        {
+            return new Tasks
+            {
+                Title = updateTasksDto.Title,
+                Description = updateTasksDto.Description,
+                Status = updateTasksDto.Status,
+                Priority = updateTasksDto.Priority
+            };
+        }
     }
 }

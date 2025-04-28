@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoApi.Data;
 using ToDoApi.Interfaces;
+using ToDoApi.Models;
 using ToDoApi.Repositories;
+using ToDoApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<ITasksRepository, TasksRepository>();
+builder.Services.AddScoped<ITasksService, TasksServices>();
 
 var app = builder.Build();
 

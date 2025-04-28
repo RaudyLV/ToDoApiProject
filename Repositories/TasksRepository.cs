@@ -37,16 +37,8 @@ namespace ToDoApi.Repositories
                 _appDbContext.Tasks.Update(task);
                 await _appDbContext.SaveChangesAsync();
         }
-        public IEnumerable<TasksDto> GetAllAsync() => _appDbContext.Tasks.ToList().Select(t => t.ToTasksDto());
+        public IEnumerable<TasksDto> GetAllTasks() => _appDbContext.Tasks.ToList().Select(t => t.ToTasksDto());
         
-        public async Task<Tasks> GetByIdAsync(int id)
-        {
-            var task = await _appDbContext.Tasks.FindAsync(id);
-
-            if(task == null)
-                return null!;
-
-            return task;
-        }
+        public async Task<Tasks> GetByIdAsync(int id) => await _appDbContext.Tasks.FindAsync(id);
     }
 }

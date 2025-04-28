@@ -4,8 +4,7 @@ using ToDoApi.Enums;
 namespace ToDoApi.Dtos.Tasks
 {
     public class UpdateTasksDto
-    {
-     
+    {        
         [Required(ErrorMessage = "El titulo es requerido.")]
         [Length(5, 50, ErrorMessage = "La longitud debe estar entre 5 y 50 cáracteres")]
         public string Title { get; set;} = string.Empty;

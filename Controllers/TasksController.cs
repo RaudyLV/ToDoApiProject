@@ -10,17 +10,17 @@ namespace ToDoApi.Controllers
     [Route("api/[controller]")]
     public class TasksController : ControllerBase
     {
-        private readonly ITasksRepository _tasksRepository;
+        private readonly ITasksService _tasksService;
 
-        public TasksController(ITasksRepository tasksRepository)
+        public TasksController(ITasksService tasksService)
         {
-            _tasksRepository = tasksRepository;
+            _tasksService = tasksService;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var tasks =  _tasksRepository.GetAllAsync();
+            var tasks =  _tasksService.GetAllTasks();
 
             if(!tasks.Any())
                 return NotFound("No hay tareas activas.");
@@ -31,7 +31,7 @@ namespace ToDoApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
-            var task = await _tasksRepository.GetByIdAsync(id);
+            var task = await _tasksService.GetByIdAsync(id);
             if  (task == null)
                 return NotFound("La tarea no fue encontrada.");
 
@@ -44,11 +44,9 @@ namespace ToDoApi.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var task = createTasksDto.ToTasksFromCreateDto();
+            await _tasksService.AddTask(createTasksDto);
 
-            await _tasksRepository.AddTaskAsync(task);
-
-            return CreatedAtAction(nameof(Get), new {Id = task.Id}, task);
+            return Ok("Tarea creada correctamente.");
         }
         
         [HttpPut("{id}")]
@@ -57,16 +55,11 @@ namespace ToDoApi.Controllers
             if(!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
-            var task = await _tasksRepository.GetByIdAsync(id);
+            var task = await _tasksService.GetByIdAsync(id);
             if(task == null)
                 return NotFound("Tarea no encontrada.");
 
-            task.Title = updateTasksDto.Title;
-            task.Description = updateTasksDto.Description;
-            task.Status = updateTasksDto.Status;
-            task.Priority = updateTasksDto.Priority;
-
-            await _tasksRepository.UpdateTaskAsync(task);
+            await _tasksService.UpdateTask(task, updateTasksDto);
 
             return Ok("Tarea actualizada correctamente.");
         }
@@ -75,13 +68,13 @@ namespace ToDoApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            var task = await _tasksRepository.GetByIdAsync(id);
+            var task = await _tasksService.GetByIdAsync(id);
             if(task == null)
                 return NotFound("Tarea no encontrada.");
             
-            await _tasksRepository.DeleteTasksAsync(task.Id);
+            await _tasksService.DeleteTask(task.Id);
             
-            return NoContent();
+            return Ok("Tarea eliminada correctamente.");
         }
     }
 }
