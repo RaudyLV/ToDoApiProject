@@ -3,7 +3,6 @@ using ToDoApi.Data;
 using ToDoApi.Dtos.Tasks;
 using ToDoApi.Helpers;
 using ToDoApi.Interfaces;
-using ToDoApi.Mappings.Task;
 using ToDoApi.Models;
 
 namespace ToDoApi.Repositories
@@ -51,8 +50,10 @@ namespace ToDoApi.Repositories
              {
                 tasks = tasks.Where(t => t.Description.Contains(query.Description));    
              }
+            
+            var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
-             return await tasks.ToListAsync();
+             return await tasks.Skip(skipNumber).Take(query.PageSize).ToListAsync();
         }
         
         public async Task<Tasks> GetByIdAsync(int id) => await _appDbContext.Tasks.FindAsync(id);
